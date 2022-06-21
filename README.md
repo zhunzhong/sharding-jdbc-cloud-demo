@@ -1,1 +1,1 @@
-# -sharding-jdbc-cloud-demo
+# sharding-jdbc-cloud-demo
