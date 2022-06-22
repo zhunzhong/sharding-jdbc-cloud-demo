@@ -24,7 +24,7 @@ public class TOrderItem implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value="order_item_id",type = IdType.AUTO)
+    @TableId(value="order_item_id",type = IdType.ASSIGN_ID)
     private Long orderItemId;
 
     @TableField("order_id")

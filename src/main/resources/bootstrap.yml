@@ -5,7 +5,7 @@ server:
 
 spring:
   application:
-    name: sharding-jdbc-cloud-demo
+    name: demo-test-provider
   servlet:
     multipart:
       max-file-size: 500MB
@@ -34,101 +34,102 @@ spring:
         file-extension: yml
         name: ${spring.application.name}
         enabled: true
+
   shardingsphere:
     mode:
       ## 运行模式类型。可选配置：Memory、Standalone、Cluster
       type: Memory
     datasource:
       # 配置真实数据源
-      names: ds1,ds2
+      names: ds0,ds1
       # 配置第 1 个数据源
-      ds1:
+      ds0:
         type: com.zaxxer.hikari.HikariDataSource
         driver-class-name: com.mysql.jdbc.Driver
         jdbc-url: jdbc:mysql://localhost:3306/ds0
         username: root
         password: root
       # 配置第 2 个数据源
-      ds2:
+      ds1:
         type: com.zaxxer.hikari.HikariDataSource
         driver-class-name: com.mysql.jdbc.Driver
         jdbc-url: jdbc:mysql://localhost:3306/ds1
         username: root
         password: root
     rules:
-  sharding: #数据分片
-    tables:
-      config:
-        actualDataNodes: ds$->{0..1}.t_config
-      t_order:
-        actualDataNodes: ds$->{0..1}.t_order_$->{0..1}
-        databaseStrategy:
-          standard:
-            shardingColumn: user_id
-            shardingAlgorithmName: standard_sharding_fixture
-        tableStrategy:
-          standard:
-            shardingColumn: order_id
-            shardingAlgorithmName: t_order_inline
-        keyGenerateStrategy:
-          column: order_id
-          keyGeneratorName: keygen_fixture
-      t_order_item:
-        actualDataNodes: ds$->{0..1}.t_order_item_$->{0..1}
-        databaseStrategy:
-          standard:
-            shardingColumn: user_id
-            shardingAlgorithmName: standard_sharding_fixture
-        tableStrategy:
-          standard:
-            shardingColumn: order_id
-            shardingAlgorithmName: t_order_item_inline
-    bindingTables:
-      - t_order,t_order_item
-    defaultDatabaseStrategy:
-      none:
-    defaultTableStrategy:
-      none:
-#        complex:
-#          shardingColumns: id, order_id
-#          shardingAlgorithmName: complex_sharding_fixture
+      sharding: #数据分片
+        tables:
+          config:
+            actualDataNodes: ds$->{0..1}.t_config
+          t_order:
+            actualDataNodes: ds$->{0..1}.t_order_$->{0..1}
+            databaseStrategy:
+              standard:
+                shardingColumn: user_id
+                shardingAlgorithmName: standard_sharding_fixture
+            tableStrategy:
+              standard:
+                shardingColumn: order_id
+                shardingAlgorithmName: t_order_inline
+            keyGenerateStrategy:
+              column: order_id
+              keyGeneratorName: keygen_fixture
+          t_order_item:
+            actualDataNodes: ds$->{0..1}.t_order_item_$->{0..1}
+            databaseStrategy:
+              standard:
+                shardingColumn: user_id
+                shardingAlgorithmName: standard_sharding_fixture
+            tableStrategy:
+              standard:
+                shardingColumn: order_id
+                shardingAlgorithmName: t_order_item_inline
+        bindingTables:
+          - t_order,t_order_item
+        defaultDatabaseStrategy:
+          none:
+        defaultTableStrategy:
+          none:
+        #          complex:
+        #            shardingColumns: id, order_id
+        #            shardingAlgorithmName: complex_sharding_fixture
 
-    sharding-algorithms:
-      standard_sharding_fixture:
-        type: HASH_MOD
-        props:
-          sharding-count: 2
-#      complex_sharding_fixture:
-#        type: COMPLEX_INLINE
-      t_order_inline:
-        type: INLINE
-        props:
-          algorithm-expression: t_order_$->{order_id % 2}
-      t_order_item_inline:
-        type: INLINE
-        props:
-          algorithm-expression: t_order_item_$->{order_id % 2}
+        sharding-algorithms:
+          standard_sharding_fixture:
+            type: HASH_MOD
+            props:
+              sharding-count: 2
+          #          complex_sharding_fixture:
+          #            type: COMPLEX_INLINE
+          t_order_inline:
+            type: INLINE
+            props:
+              algorithm-expression: t_order_$->{order_id % 2}
+          t_order_item_inline:
+            type: INLINE
+            props:
+              algorithm-expression: t_order_item_$->{order_id % 2}
 
-    key-generators:
-      keygen_fixture:
-        type: SNOWFLAKE
-#    readwrite-splitting: #读写分离
-#      data-sources:
-#        readwrite_ds:
-#          type: Static
-#          props:
-#            write-data-source-name: ds1
-#            read-data-source-names: ds2
-#      load-balancers:
-#        readwrite_ds:
-#          type: ROUND_ROBIN
+        key-generators:
+          keygen_fixture:
+            type: SNOWFLAKE
+#      readwrite-splitting: #读写分离
+#        data-sources:
+#          readwrite_ds:
+#            type: Static
+#            props:
+#              write-data-source-name: ds1
+#              read-data-source-names: ds2
+#        load-balancers:
+#          readwrite_ds:
+#            type: ROUND_ROBIN
     props:
       #展示修改后的sql语句
       sql-show: true
 
 # mybatis-plus
 mybatis-plus:
-  mapper-locations: classpath:/mybatis/mapper/*.xml
+  mapper-locations: classpath://mybatis/mapper/*.xml
   typeAliasesPackage: com.iflytek.zhunzhong.demo.pojo.entity
   global-config.banner: false
   #global-config.db-config.id-type: ASSIGN_ID

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -45,8 +46,8 @@ public class ShardingTestController {
     }
 
     @GetMapping("/testSharding")
-    public String testSharding() throws JsonProcessingException {
-        Long userId = 1L;
+    public String testSharding(@RequestParam("userId") Long userId) throws JsonProcessingException {
+        //IdWorker.getId();
         TOrder tOrder = new TOrder(null, userId, "创建");
         tOrderMapper.insert(tOrder);
         Long orderId = tOrder.getOrderId();
