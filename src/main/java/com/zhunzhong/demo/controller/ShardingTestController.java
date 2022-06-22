@@ -48,6 +48,7 @@ public class ShardingTestController {
     @GetMapping("/testSharding")
     public String testSharding(@RequestParam("userId") Long userId) throws JsonProcessingException {
         //IdWorker.getId();
+        //写入订单数据.
         TOrder tOrder = new TOrder(null, userId, "创建");
         tOrderMapper.insert(tOrder);
         Long orderId = tOrder.getOrderId();
@@ -57,6 +58,11 @@ public class ShardingTestController {
         orderItem.setStatus("open");
         orderItem.setUserId(userId);
         tOrderItemMapper.insert(orderItem);
+
+        //查询订单数据。
+        ObjectMapper objectMapper = new ObjectMapper();
+        System.out.println(objectMapper.writeValueAsString(tOrderMapper.selectById(tOrder.getOrderId())));
+        System.out.println(objectMapper.writeValueAsString(tOrderItemMapper.selectById(orderItem.getOrderItemId())));
         return "ok";
     }
 }
