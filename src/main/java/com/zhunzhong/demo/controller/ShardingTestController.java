@@ -1,5 +1,6 @@
 package com.zhunzhong.demo.controller;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -61,8 +62,17 @@ public class ShardingTestController {
 
         //查询订单数据。
         ObjectMapper objectMapper = new ObjectMapper();
-        System.out.println(objectMapper.writeValueAsString(tOrderMapper.selectById(tOrder.getOrderId())));
-        System.out.println(objectMapper.writeValueAsString(tOrderItemMapper.selectById(orderItem.getOrderItemId())));
+
+        QueryWrapper<TOrder> wrapper = new QueryWrapper<>();
+        wrapper.eq("user_id", userId);
+        wrapper.eq("order_id", tOrder.getOrderId());
+        System.out.println(objectMapper.writeValueAsString(tOrderMapper.selectOne(wrapper)));
+
+        QueryWrapper<TOrderItem> queryItem = new QueryWrapper<>();
+        queryItem.eq("user_id", userId);
+        queryItem.eq("order_id", tOrder.getOrderId());
+        queryItem.eq("order_item_id", orderItem.getOrderItemId());
+        System.out.println(objectMapper.writeValueAsString(tOrderItemMapper.selectOne(queryItem)));
         return "ok";
     }
 }

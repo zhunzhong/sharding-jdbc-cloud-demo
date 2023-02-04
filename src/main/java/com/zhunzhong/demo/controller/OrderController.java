@@ -1,6 +1,7 @@
 package com.zhunzhong.demo.controller;
 
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.zhunzhong.demo.dao.OrderDao;
 import com.zhunzhong.demo.pojo.entity.Order;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ public class OrderController {
     @RequestMapping(value = "/add", method = GET)
     @ResponseBody
     public String add(){
+        IService<Thread> a;
 //        for(int i=0;i<10;i++){
 //            Order order = new Order();
 //            order.setOrderId((long) i);
